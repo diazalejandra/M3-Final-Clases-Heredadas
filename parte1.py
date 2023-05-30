@@ -1,17 +1,31 @@
 from clases import Automovil
 
+
+def inputNumber(message):
+    while True:
+        try:
+            userInput = int(input(message))
+        except ValueError:
+            print("Ingrese un número válido")
+            continue
+        else:
+            return userInput
+
+
 while True:
     vehiculos = []
-    cantidad = int(input("Cuantos vehículos desea insertar: "))
+    cantidad = inputNumber("Cuantos vehículos desea insertar: ")
     for i in range(cantidad):
         print(f"\nDatos del automóvil {i+1}")
         marca = input("Inserte la marca del automóvil: ")
         modelo = input("Inserte el modelo: ")
-        n_ruedas = int(input("Inserte el número de ruedas: "))
-        velocidad = int(input("Inserte la velicidad en km/h: "))
-        cilindrada = int(input("Inserte el cilindraje en cc: "))
+        n_ruedas = inputNumber("Inserte el número de ruedas: ")
+        velocidad = inputNumber("Inserte la velicidad en km/h: ")
+        cilindrada = inputNumber("Inserte el cilindraje en cc: ")
         vehiculos.append(Automovil(marca, modelo, n_ruedas, velocidad, cilindrada))
+    break
 
+if vehiculos:
     print("\nImprimiendo por pantalla los vehículos: ")
     for index, value in enumerate(vehiculos):
         print(f"Datos del automóvil {index+1}: ", end="")
@@ -20,4 +34,3 @@ while True:
         print(f"{value.n_ruedas} ruedas", end=", ")
         print(f"{value.velocidad} Km/h", end=", ")
         print(f"{value.cilindrada} cc")
-    break

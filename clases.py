@@ -9,24 +9,30 @@ class Vehiculo():
         self.n_ruedas = n_ruedas
 
     def guardar_datos_csv(self, nombre_archivo):
-        archivo = open(nombre_archivo, "a")
-        datos = [(self.__class__, self.__dict__)]
-        archivo_csv = csv.writer(archivo, lineterminator='\n')
-        archivo_csv.writerows(datos)
-        archivo.close()
+        try:
+            archivo = open(nombre_archivo, "a")
+            datos = [(self.__class__, self.__dict__)]
+            archivo_csv = csv.writer(archivo, lineterminator='\n')
+            archivo_csv.writerows(datos)
+            archivo.close()
+        except csv.Error as e:
+            print(f"Error: {e}")
 
     def recuperar_datos_csv(nombre_archivo):
         vehiculos = []
-        archivo = open(nombre_archivo, "r")
-        archivo_csv = csv.reader(archivo)
-        for vehiculo in archivo_csv:
-            vehiculos.append(vehiculo)
-        archivo.close()
-        return vehiculos
+        try:
+            archivo = open(nombre_archivo, "r")
+            archivo_csv = csv.reader(archivo)
+            for vehiculo in archivo_csv:
+                vehiculos.append(vehiculo)
+            archivo.close()
+        except csv.Error as e:
+            print(f"Error: {e}")
+        else:
+            return vehiculos
 
     def imprimir_por_clase(vehiculos):
         tipos = ["Particular", "Carga", "Bicicleta", "Motocicleta"]
-        vehiculos.sort()
 
         for tipo in tipos:
             print(f"\nLista de Vehículos {tipo}: ")
@@ -56,16 +62,37 @@ class Carga(Automovil):
 
 
 class Bicicleta(Vehiculo):
-    tipos = ["Urbana, Carrera"]
+    tipos = ["Urbana", "Carrera", "Deportiva"]
 
     def __init__(self, marca, modelo, n_ruedas, tipo):
         super().__init__(marca, modelo, n_ruedas)
-        self.tipo = tipo
+        self.tipo = self.validar_tipo(tipo)
+
+    def validar_tipo(self, tipo):
+        if tipo in self.tipos:
+            return tipo
+        else:
+            raise Exception("Tipo no válido")
 
 
 class Motocicleta(Bicicleta):
+    cuadros = ["doble cuna", "multitubular", "doble viga"]
+    motores = ["2T", "4T"]
+
     def __init__(self, marca, modelo, n_ruedas, tipo, motor, cuadro, n_radios):
         super().__init__(marca, modelo, n_ruedas, tipo)
-        self.motor = motor
-        self.cuadro = cuadro
+        self.motor = self.validar_motor(motor)
+        self.cuadro = self.validar_cuadro(cuadro)
         self.n_radios = n_radios
+
+    def validar_cuadro(self, cuadro):
+        if cuadro.lower() in self.cuadros:
+            return cuadro
+        else:
+            raise Exception("Tipo no válido")
+
+    def validar_motor(self, motor):
+        if motor.upper() in self.motores:
+            return motor
+        else:
+            raise Exception("Tipo no válido")
